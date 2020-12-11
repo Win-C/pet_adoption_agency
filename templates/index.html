@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1>Pets</h1>
+    <div class="row">
+    {% for pet in pets %}
+    <div class="col-4">
+        {% if pet.available %}
+            <h6>{{ pet.name }} <b>is available!</b></h6>
+        {% else %}
+            <h6>{{ pet.name }}</h6>
+        {% endif %}
+        <img style="width: 100%" src={{pet.photo_url}} alt="">
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
