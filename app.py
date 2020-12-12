@@ -3,8 +3,11 @@
 from flask import Flask, redirect, render_template, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Pet
-
+from project_secrets import PETFINDER_API_KEY, PETFINDER_API_SECRET
 from forms import PetAddForm, PetEditForm
+from petfinder_requests import get_oauth_token
+
+import requests
 
 app = Flask(__name__)
 
@@ -22,6 +25,7 @@ db.create_all()
 
 toolbar = DebugToolbarExtension(app)
 
+auth_token = None
 
 @app.route("/")
 def homepage():
@@ -84,4 +88,10 @@ def pet_detail_edit(pet_id):
     else:
         return render_template("pet_detail.html", form=form, pet=pet)
 
+
+@app.before_first_request
+def refresh_credentials():
+    """Just once, get token and store it globally."""
+    global auth_token
+    auth_token = get_oauth_token()
 
